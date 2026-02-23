@@ -4,6 +4,14 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { Header } from "./components/Header";
+import {
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
+import { First } from "./components/First";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,25 +34,32 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <SidebarProvider>
-          <div className="flex flex-col h-screen">
-            <header className="h-14">
-              <Header />
-            </header>
-            <div className="flex flex-1 overflow-hidden ">
-              <AppSidebar />
-              <main className="flex overflow-y-auto ">
-                <div className="h-full w-18 border border-[#E4E4E7] flex justify-center">
-                  <SidebarTrigger className="h-10 w-10" />
-                </div>{" "}
-                {children}
-              </main>
-            </div>
-          </div>
-        </SidebarProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <SignedOut>
+            <First />
+          </SignedOut>
+          <SignedIn>
+            <SidebarProvider>
+              <div className="flex flex-col h-screen">
+                <header className="h-14">
+                  <Header />
+                </header>
+                <div className="flex flex-1 overflow-hidden ">
+                  <AppSidebar />
+                  <main className="flex overflow-y-auto ">
+                    <div className="h-full w-18 border border-[#E4E4E7] flex justify-center">
+                      <SidebarTrigger className="h-10 w-10" />
+                    </div>{" "}
+                    {children}
+                  </main>
+                </div>
+              </div>
+            </SidebarProvider>
+          </SignedIn>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

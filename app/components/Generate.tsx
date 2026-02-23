@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -10,13 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Sheet } from "lucide-react";
 import { FaRegFileAlt } from "react-icons/fa";
 import { GiFlexibleStar } from "react-icons/gi";
 
 export const Generate = () => {
   return (
-    <Card className="h-fit w-[50%]">
+    <Card className="h-fit w-[50%] min-w-221.5">
       <CardHeader className="gap-2">
         <CardTitle className="flex text-[24px] font-semibold items-center gap-2">
           <GiFlexibleStar />
