@@ -8,11 +8,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { BookOpen, ChevronLeft } from "lucide-react";
-import { FaRegFileAlt } from "react-icons/fa";
 import { GiFlexibleStar } from "react-icons/gi";
 import { DialogSee } from "./DialogSee";
-
-export const SummarizedArticle = () => {
+import { questionType } from "./Generate";
+type propsType = {
+  questions: questionType | undefined;
+  summary: string;
+  title: string | undefined;
+  text: string | undefined;
+};
+export const SummarizedArticle = (props: propsType) => {
   return (
     <div className="h-fit w-[50%] min-w-221.5">
       <Button variant={"outline"}>
@@ -31,24 +36,12 @@ export const SummarizedArticle = () => {
               <BookOpen className="w-4 h-4" />
               Summarized content
             </p>
-            <h1 className="text-[24px] font-semibold">Genghis khan</h1>
-            <p>
-              Genghis Khan, born Temüjin around 1162, was the founder of the
-              Mongol Empire. After his father's death, Temüjin's family was left
-              in poverty, and he later killed his half-brother to secure his
-              position. He built alliances with leaders like Jamukha and
-              Toghrul, and despite being defeated in battle and briefly under
-              the Jin dynasty, he rose to power by defeating rivals. By 1206,
-              after overcoming the Naiman tribe and executing Jamukha, Temüjin
-              became the undisputed ruler of the Mongol steppe, eventually
-              leading a series of successful military campaigns that expanded
-              his empire across China and Central Asia.
-            </p>
+            <h1 className="text-[24px] font-semibold">{props.title}</h1>
+            <p>{props.summary}</p>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          {/* <Button variant={"outline"}>See content</Button> */}
-          <DialogSee SeeType={false} />
+          <DialogSee title={props.title} text={props.text} />
           <Button>Generate quiz</Button>
         </CardFooter>
       </Card>
