@@ -1,37 +1,30 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+    provider = "prisma-client-js"
+}
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+    provider = "postgresql"
+}
 
-// generator client {
-//   provider = "prisma-client-js"
-// }
+model Article {
+    id        String   @id @default(cuid())
+    title     String
+    content   String
+    summary   String
+    userId    String?
+    // user      User     @relation(fields: [userId])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    quizzes   Quiz[]
+}
 
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// model Article {
-//   id        Int      @id @default(autoincrement())
-//   title
-//   content
-//   summary
-//   userId
-//   user
-//   createdAt DateTime @default(now())
-//   email     String   @unique
-//   name      String?
-//   role      Role     @default(USER)
-//   posts     Post[]
-// }
-// model Quiz {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//   published Boolean  @default(false)
-//   title     String   @db.VarChar(255)
-//   author    User     @relation(fields: [authorId], references: [id])
-//   authorId  Int
-// }
+model Quiz {
+    id        String   @id @default(cuid())
+    question  String
+    options   String[]
+    answer    String
+    articleId String
+    article   Article  @relation(fields: [articleId], references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
