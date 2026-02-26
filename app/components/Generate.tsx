@@ -10,100 +10,26 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { FaRegFileAlt } from "react-icons/fa";
 import { GiFlexibleStar } from "react-icons/gi";
+import { useAppContext } from "../context/AppContext";
+import { useRouter } from "next/navigation";
 export type questionType = {
   question: string;
   options: string[];
   answer: string;
 }[];
+
 export const Generate = () => {
-  // const router = useRouter();
-  const [mainObj, setMainobj] = useState<{ title?: string; text?: string }>({
-    title: "",
-    text: "",
-  });
-  const [question, setQuestion] = useState<questionType>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<string | null>(null);
-  const handleSummarize = async () => {
-    if (!mainObj.text) return;
-    setLoading(true);
-
-    try {
-      const response = await fetch("/api/sum", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: mainObj.text }),
-      });
-      console.log("Status:", response.status);
-      const data = await response.json();
-      setResult(data.summary);
-      setQuestion(data.questions);
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const postFunction = async () => {
-    try {
-      const response = await fetch("/api/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: mainObj.title,
-          text: mainObj.text,
-          summary: result,
-          questions: question,
-        }),
-      });
-
-      const data = await response.json();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getFunction = async () => {
-    try {
-      const response = await fetch("/api/getAll", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const getOne = async () => {
-    try {
-      const response = await fetch("/api/getOne/cmm1ixqkt0006ipdfgv33aj7h", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const { mainObj, setMainobj, handleSummarize, postFunction, result } =
+    useAppContext();
 
   useEffect(() => {
-    postFunction();
-    // router.push("")
+    if (result) {
+      postFunction();
+    }
   }, [result]);
-  // useEffect(() => {
-  //   getFunction();
-  //   getOne();
-  // }, []);
 
   return (
     <Card className="h-fit w-[50%] min-w-221.5">

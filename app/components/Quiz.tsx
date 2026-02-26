@@ -9,13 +9,24 @@ import {
 import { useState } from "react";
 import { GiFlexibleStar } from "react-icons/gi";
 import { DialoClose } from "./DialoClose";
+import { useAppContext } from "../context/AppContext";
+import { useRouter } from "next/navigation";
+import { ResultQuiz } from "./ResultQuiz";
+
 export const Quiz = () => {
-  const [Qnum, setQnum] = useState<number>(1);
-  const addQnum = () => {
-    setQnum((prev) => prev + 1);
-  };
+  const [Qnum, setQnum] = useState<number>(0);
+  const [answers, setAnswers] = useState<number[]>([]);
+  const { question } = useAppContext();
+
+  const addQnum = () => setQnum((prev) => prev + 1);
+  const saveAnswer = (ans: number) => setAnswers((prev) => [...prev, ans]);
+
+  if (Qnum >= 5) {
+    return <ResultQuiz answers={answers} setQnum={setQnum} />;
+  }
+
   return (
-    <div className="h-fit min-w-139.5 w-[30%]">
+    <div className="h-fit min-w-162.5 w-[40%]">
       <div className="flex w-full justify-between">
         <h1 className="flex text-[24px] font-semibold items-center gap-2">
           <GiFlexibleStar />
@@ -24,34 +35,31 @@ export const Quiz = () => {
         <DialoClose />
       </div>
       <p className="text-[16px] font-normal text-[#71717A] mb-6">
-        Take a quick test about your knowledge from your content{" "}
+        Take a quick test about your knowledge from your content
       </p>
       <Card>
         <CardHeader>
           <CardDescription className="text-[#000000] font-medium text-xl flex justify-between">
-            Question
-            <span>
-              {Qnum} <span className="text-[#737373] text-base">/ 5</span>
+            {question[Qnum]?.question}
+            <span className="w-12.5">
+              {Qnum + 1} <span className="text-[#737373] text-base">/ 5</span>
             </span>
           </CardDescription>
         </CardHeader>
-        <CardContent className="w-full flex gap-4">
-          <div className="flex flex-1 flex-col gap-4">
-            <Button variant={"outline"} onClick={addQnum}>
-              yes
+        <CardContent className="w-full flex gap-4 flex-wrap">
+          {question[Qnum]?.options.map((ele, i) => (
+            <Button
+              key={i}
+              variant={"outline"}
+              onClick={() => {
+                addQnum();
+                saveAnswer(i);
+                console.log(answers);
+              }}
+            >
+              {ele}
             </Button>
-            <Button variant={"outline"} onClick={addQnum}>
-              No
-            </Button>
-          </div>
-          <div className="flex flex-1 flex-col gap-4">
-            <Button variant={"outline"} onClick={addQnum}>
-              Yes/no
-            </Button>
-            <Button variant={"outline"} onClick={addQnum}>
-              No/yes
-            </Button>
-          </div>
+          ))}
         </CardContent>
       </Card>
     </div>

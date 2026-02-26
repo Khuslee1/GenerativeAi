@@ -1,8 +1,8 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -10,14 +10,11 @@ import {
 import { BookOpen, ChevronLeft } from "lucide-react";
 import { GiFlexibleStar } from "react-icons/gi";
 import { DialogSee } from "./DialogSee";
-import { questionType } from "./Generate";
-type propsType = {
-  questions: questionType | undefined;
-  summary: string;
-  title: string | undefined;
-  text: string | undefined;
-};
-export const SummarizedArticle = (props: propsType) => {
+import { useAppContext } from "../context/AppContext";
+import { useRouter } from "next/navigation";
+export const SummarizedArticle = () => {
+  const { mainObj, result } = useAppContext();
+  const router = useRouter();
   return (
     <div className="h-fit w-[50%] min-w-221.5">
       <Button variant={"outline"}>
@@ -36,13 +33,13 @@ export const SummarizedArticle = (props: propsType) => {
               <BookOpen className="w-4 h-4" />
               Summarized content
             </p>
-            <h1 className="text-[24px] font-semibold">{props.title}</h1>
-            <p>{props.summary}</p>
+            <h1 className="text-[24px] font-semibold">{mainObj.title}</h1>
+            <p>{result}</p>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <DialogSee title={props.title} text={props.text} />
-          <Button>Generate quiz</Button>
+          <DialogSee title={mainObj.title} text={mainObj.text} />
+          <Button onClick={() => router.push("../quiz")}>Generate quiz</Button>
         </CardFooter>
       </Card>
     </div>

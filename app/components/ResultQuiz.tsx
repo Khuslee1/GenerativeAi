@@ -7,38 +7,45 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Bookmark, CircleCheck, CircleX, RotateCcw } from "lucide-react";
-import { useState } from "react";
 import { GiFlexibleStar } from "react-icons/gi";
+import { useAppContext } from "../context/AppContext";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 type MockType = { question: string; answer_user: string; answer_ai: string }[];
-const MockData: MockType = [
-  {
-    question: "What was Genghis Khan’s birth name?",
-    answer_user: "Toghrul",
-    answer_ai: "Temüjin",
-  },
-  {
-    question: "What was Genghis Khan’s birth name?",
-    answer_user: "Toghrul",
-    answer_ai: "Temüjin",
-  },
-  {
-    question: "What was Genghis Khan’s birth name?",
-    answer_user: "Toghrul",
-    answer_ai: "Toghrul",
-  },
-  {
-    question: "What was Genghis Khan’s birth name?",
-    answer_user: "Toghrul",
-    answer_ai: "Temüjin",
-  },
-  {
-    question: "What was Genghis Khan’s birth name?",
-    answer_user: "Toghrul",
-    answer_ai: "Toghrul",
-  },
-];
-
-export const ResultQuiz = () => {
+// const MockData: MockType = [
+//   {
+//     question: "What was Genghis Khan’s birth name?",
+//     answer_user: "Toghrul",
+//     answer_ai: "Temüjin",
+//   },
+//   {
+//     question: "What was Genghis Khan’s birth name?",
+//     answer_user: "Toghrul",
+//     answer_ai: "Temüjin",
+//   },
+//   {
+//     question: "What was Genghis Khan’s birth name?",
+//     answer_user: "Toghrul",
+//     answer_ai: "Toghrul",
+//   },
+//   {
+//     question: "What was Genghis Khan’s birth name?",
+//     answer_user: "Toghrul",
+//     answer_ai: "Temüjin",
+//   },
+//   {
+//     question: "What was Genghis Khan’s birth name?",
+//     answer_user: "Toghrul",
+//     answer_ai: "Toghrul",
+//   },
+// ];
+type PropsType = {
+  answers: number[];
+  setQnum: Dispatch<SetStateAction<number>>;
+};
+export const ResultQuiz = ({ answers, setQnum }: PropsType) => {
+  const { question } = useAppContext();
+  const router = useRouter();
   return (
     <div className="h-fit min-w-139.5 w-[30%]">
       <div className="flex w-full justify-between">
@@ -58,10 +65,10 @@ export const ResultQuiz = () => {
         </CardHeader>
         <CardContent className="w-full flex flex-col gap-7">
           <div className="flex flex-col gap-5">
-            {MockData.map((ele, i) => {
+            {question.map((ele, i) => {
               return (
-                <div className="flex gap-3">
-                  {ele.answer_ai == ele.answer_user ? (
+                <div key={i} className="flex gap-3">
+                  {ele.answer == String(answers[i]) ? (
                     <CircleCheck className="text-[#22C55E]" />
                   ) : (
                     <CircleX className="text-[#B91C1C]" />
@@ -70,10 +77,12 @@ export const ResultQuiz = () => {
                     <p className="text-[#737373] text-xs">
                       {i + 1}. {ele.question}
                     </p>
-                    <p className="text-xs">Your answer: {ele.answer_user}</p>
-                    {ele.answer_ai != ele.answer_user && (
+                    <p className="text-xs">
+                      Your answer: {ele.options[answers[i]]}
+                    </p>
+                    {ele.answer != String(answers[i]) && (
                       <p className="text-xs text-[#22C55E]">
-                        Correct: {ele.answer_ai}
+                        Correct: {ele.options[Number(ele.answer)]}
                       </p>
                     )}
                   </div>
@@ -82,10 +91,16 @@ export const ResultQuiz = () => {
             })}
           </div>
           <div className="flex w-full gap-4">
-            <Button variant={"outline"} className="flex flex-1">
+            <Button
+              onClick={() => {
+                setQnum(0);
+              }}
+              variant={"outline"}
+              className="flex flex-1"
+            >
               <RotateCcw /> Restart quiz
             </Button>
-            <Button className="flex flex-1">
+            <Button onClick={() => router.push("../")} className="flex flex-1">
               {" "}
               <Bookmark /> Save and leave
             </Button>
