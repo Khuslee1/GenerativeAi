@@ -10,7 +10,7 @@ import { Bookmark, CircleCheck, CircleX, RotateCcw } from "lucide-react";
 import { GiFlexibleStar } from "react-icons/gi";
 import { useAppContext } from "../context/AppContext";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 type PropsType = {
   answers: number[];
   setQnum: Dispatch<SetStateAction<number>>;
@@ -19,6 +19,19 @@ type PropsType = {
 export const ResultQuiz = ({ answers, setQnum, setAnswers }: PropsType) => {
   const { article } = useAppContext();
   const router = useRouter();
+  const [correct, setCorrect] = useState<number>(0);
+  const counter = () => {
+    let count = 0;
+    answers.forEach((ele, i) => {
+      if (String(answers[i]) === article?.article.quizzes[i].answer) {
+        count++;
+      }
+    });
+    setCorrect(count);
+  };
+  useEffect(() => {
+    counter();
+  }, []);
   return (
     <div className="h-fit min-w-200 w-[40%]">
       <div className="flex w-full justify-between">
@@ -33,7 +46,8 @@ export const ResultQuiz = ({ answers, setQnum, setAnswers }: PropsType) => {
       <Card>
         <CardHeader>
           <CardDescription className="text-[#000000] font-medium text-2xl">
-            Your score: 2 <span className="text-base text-[#71717A]">/ 5</span>
+            Your score: {correct}{" "}
+            <span className="text-base text-[#71717A]">/ 5</span>
           </CardDescription>
         </CardHeader>
         <CardContent className="w-full flex flex-col gap-7">
@@ -68,6 +82,7 @@ export const ResultQuiz = ({ answers, setQnum, setAnswers }: PropsType) => {
               onClick={() => {
                 setQnum(0);
                 setAnswers([]);
+                setCorrect(0);
               }}
               variant={"outline"}
               className="flex flex-1"

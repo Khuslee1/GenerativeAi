@@ -69,7 +69,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
       console.log(data);
       router.push(`../summary/${data.id}`);
-      setLoading(false);
       getFunction();
     } catch (err) {
       console.error(err);
@@ -104,6 +103,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       console.error(err);
     } finally {
       setLoadingP(false);
+      setLoading(false);
     }
   };
 
