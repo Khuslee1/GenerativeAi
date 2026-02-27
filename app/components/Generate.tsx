@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { FaRegFileAlt } from "react-icons/fa";
 import { GiFlexibleStar } from "react-icons/gi";
 import { useAppContext } from "../context/AppContext";
-import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 export type questionType = {
   question: string;
   options: string[];
@@ -22,14 +22,42 @@ export type questionType = {
 }[];
 
 export const Generate = () => {
-  const { mainObj, setMainobj, handleSummarize, postFunction, result } =
-    useAppContext();
+  const {
+    mainObj,
+    setMainobj,
+    handleSummarize,
+    postFunction,
+    result,
+    loading,
+  } = useAppContext();
 
-  useEffect(() => {
-    if (result) {
-      postFunction();
-    }
-  }, [result]);
+  // useEffect(() => {
+  //   if (result) {
+  //     postFunction();
+  //   }
+  // }, [result]);
+
+  if (loading)
+    return (
+      <Card className="h-fit w-[50%] min-w-221.5">
+        <CardHeader className="gap-2">
+          <CardTitle className="flex text-[24px] font-semibold items-center gap-2">
+            <GiFlexibleStar />
+            Article Quiz Generator
+          </CardTitle>
+          <CardDescription className="text-[16px] font-normal text-[#71717A]">
+            Paste your article below to generate a summarize and quiz question.
+            Your articles will saved in the sidebar for future reference.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-5">
+          <Spinner className="size-8" />
+        </CardContent>
+        <CardFooter className="flex self-end">
+          <Button disabled>Generate summary</Button>
+        </CardFooter>
+      </Card>
+    );
 
   return (
     <Card className="h-fit w-[50%] min-w-221.5">

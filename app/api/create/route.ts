@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       include: { quizzes: true },
     });
 
-    return new Response(JSON.stringify({ message: "Successfully created" }), {
+    return new Response(JSON.stringify({ id: article.id }), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (err) {

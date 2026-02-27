@@ -10,8 +10,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAppContext } from "../context/AppContext";
 
 export const DialoClose = () => {
+  const { article } = useAppContext();
+  const router = useRouter();
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,7 +37,13 @@ export const DialoClose = () => {
           <DialogClose asChild>
             <Button className="flex-1">Go Back</Button>
           </DialogClose>
-          <Button variant={"outline"} className="flex-1">
+          <Button
+            variant={"outline"}
+            className="flex-1"
+            onClick={() => {
+              router.push(`./summary/${article?.article.id}`);
+            }}
+          >
             Cancel quiz
           </Button>
         </DialogFooter>

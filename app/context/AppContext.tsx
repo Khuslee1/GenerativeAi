@@ -10,6 +10,15 @@ type Question = {
 type TitleIdType = {
   articles: { title: string; id: string }[];
 };
+type ArticleType = {
+  article: {
+    id: string;
+    content: string;
+    quizzes: Question[];
+    summary: string;
+    title: string;
+  };
+};
 
 type AppContextType = {
   mainObj: { title?: string; text?: string };
@@ -21,11 +30,13 @@ type AppContextType = {
   question: Question[];
   setQuestion: (questions: Question[]) => void;
   loading: boolean;
-  postFunction: () => Promise<void>;
+  postFunction: (summary: string, questions: Question[]) => Promise<void>;
   getFunction: () => Promise<void>;
   getOne: (id: string) => Promise<void>;
   handleSummarize: () => Promise<void>;
   titleId: TitleIdType | undefined;
+  article: ArticleType | undefined;
+  loadingP: boolean;
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -39,9 +50,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [question, setQuestion] = useState<Question[]>([]);
   const [loading, setLoading] = useState(false);
   const [titleId, setTitleId] = useState<TitleIdType>();
+  const [article, setArticle] = useState<ArticleType>();
+  const [loadingP, setLoadingP] = useState<boolean>(false);
   const router = useRouter();
 
-  const postFunction = async () => {
+  const postFunction = async (summary: string, questions: Question[]) => {
     try {
       const response = await fetch("/api/create", {
         method: "POST",
@@ -49,13 +62,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           title: mainObj.title,
           text: mainObj.text,
-          summary: result,
-          questions: question,
+          summary,
+          questions,
         }),
       });
       const data = await response.json();
       console.log(data);
-      router.push("../summary");
+      router.push(`../summary/${data.id}`);
+      setLoading(false);
+      getFunction();
     } catch (err) {
       console.error(err);
     }
@@ -76,6 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const getOne = async (id: string) => {
+    setLoadingP(true);
     try {
       const response = await fetch(`/api/getOne/${id}`, {
         method: "GET",
@@ -83,8 +99,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       });
       const data = await response.json();
       console.log(data);
+      setArticle(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoadingP(false);
     }
   };
 
@@ -100,13 +119,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       });
       console.log("Status:", response.status);
       const data = await response.json();
-      //   setResult(data.summary);
+      setResult(data.summary);
       setQuestion(data.questions);
+      await postFunction(data.summary, data.questions);
       console.log(data);
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -125,6 +143,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         getOne,
         handleSummarize,
         titleId,
+        article,
+        loadingP,
       }}
     >
       {children}

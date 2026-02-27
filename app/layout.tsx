@@ -37,7 +37,7 @@ export default function RootLayout({
             <First />
           </SignedOut>
           <SignedIn>
-            <SidebarProvider>
+            <SidebarProvider defaultOpen={false}>
               <div className="flex flex-col h-screen">
                 <header className="h-14">
                   <Header />

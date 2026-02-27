@@ -2,7 +2,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
@@ -14,7 +13,7 @@ import { useAppContext } from "../context/AppContext";
 import { useEffect } from "react";
 
 export function AppSidebar() {
-  const { getFunction, titleId } = useAppContext();
+  const { getFunction, titleId, article } = useAppContext();
 
   useEffect(() => {
     getFunction();
@@ -35,7 +34,7 @@ export function AppSidebar() {
               {titleId?.articles.map((ele) => (
                 <SidebarMenuItem key={ele.id}>
                   <SidebarMenuButton asChild>
-                    <a href={`/chat/${ele.id}`} className="text-black">
+                    <a href={`/summary/${ele.id}`} className="text-black">
                       {ele.title}
                     </a>
                   </SidebarMenuButton>

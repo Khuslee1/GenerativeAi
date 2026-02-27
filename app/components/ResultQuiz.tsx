@@ -11,43 +11,16 @@ import { GiFlexibleStar } from "react-icons/gi";
 import { useAppContext } from "../context/AppContext";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
-type MockType = { question: string; answer_user: string; answer_ai: string }[];
-// const MockData: MockType = [
-//   {
-//     question: "What was Genghis Khan’s birth name?",
-//     answer_user: "Toghrul",
-//     answer_ai: "Temüjin",
-//   },
-//   {
-//     question: "What was Genghis Khan’s birth name?",
-//     answer_user: "Toghrul",
-//     answer_ai: "Temüjin",
-//   },
-//   {
-//     question: "What was Genghis Khan’s birth name?",
-//     answer_user: "Toghrul",
-//     answer_ai: "Toghrul",
-//   },
-//   {
-//     question: "What was Genghis Khan’s birth name?",
-//     answer_user: "Toghrul",
-//     answer_ai: "Temüjin",
-//   },
-//   {
-//     question: "What was Genghis Khan’s birth name?",
-//     answer_user: "Toghrul",
-//     answer_ai: "Toghrul",
-//   },
-// ];
 type PropsType = {
   answers: number[];
   setQnum: Dispatch<SetStateAction<number>>;
+  setAnswers: Dispatch<SetStateAction<number[]>>;
 };
-export const ResultQuiz = ({ answers, setQnum }: PropsType) => {
-  const { question } = useAppContext();
+export const ResultQuiz = ({ answers, setQnum, setAnswers }: PropsType) => {
+  const { article } = useAppContext();
   const router = useRouter();
   return (
-    <div className="h-fit min-w-139.5 w-[30%]">
+    <div className="h-fit min-w-200 w-[40%]">
       <div className="flex w-full justify-between">
         <h1 className="flex text-[24px] font-semibold items-center gap-2">
           <GiFlexibleStar />
@@ -65,7 +38,7 @@ export const ResultQuiz = ({ answers, setQnum }: PropsType) => {
         </CardHeader>
         <CardContent className="w-full flex flex-col gap-7">
           <div className="flex flex-col gap-5">
-            {question.map((ele, i) => {
+            {article?.article.quizzes.map((ele, i) => {
               return (
                 <div key={i} className="flex gap-3">
                   {ele.answer == String(answers[i]) ? (
@@ -94,13 +67,20 @@ export const ResultQuiz = ({ answers, setQnum }: PropsType) => {
             <Button
               onClick={() => {
                 setQnum(0);
+                setAnswers([]);
               }}
               variant={"outline"}
               className="flex flex-1"
             >
               <RotateCcw /> Restart quiz
             </Button>
-            <Button onClick={() => router.push("../")} className="flex flex-1">
+            <Button
+              onClick={() => {
+                router.push("../");
+                setAnswers([]);
+              }}
+              className="flex flex-1"
+            >
               {" "}
               <Bookmark /> Save and leave
             </Button>

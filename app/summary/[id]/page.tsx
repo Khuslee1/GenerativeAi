@@ -1,4 +1,4 @@
-import { SummarizedArticle } from "../components/SummarizedArticle";
+import { SummarizedArticle } from "@/app/components/SummarizedArticle";
 
 export default function SummaryPage() {
   return (

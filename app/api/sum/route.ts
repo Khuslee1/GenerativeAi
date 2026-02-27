@@ -12,29 +12,33 @@ export async function POST(req: Request) {
   }
 
   try {
-    const [summaryResult, questionsResult] = await Promise.all([
-      ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `Please provide a concise summary of the following article: ${text}`,
-      }),
-      ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: `Generate 5 multiple choice questions based on this article: ${text}. Return the response in this exact JSON format:
-        [
-          {
-            "question": "Question text here",
-            "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-            "answer": "0"
-          }
-        ]
-        Make sure the response is valid JSON and the answer is the index (0-3) of the correct option.`,
-      }),
-    ]);
+    const result = await ai.models.generateContent({
+      model: "gemini-2.0-flash",
+      contents: `
+    Given this article: ${text}
 
-    const summary = summaryResult.text;
-    const questionsRaw = questionsResult.text ?? "";
-    const cleanedJson = questionsRaw.replace(/```json|```/g, "").trim();
-    const questions = JSON.parse(cleanedJson);
+    Please provide two things:
+    1. A concise summary of the article
+    2. Generate 5 multiple choice questions
+
+    Return in this exact JSON format:
+    {
+      "summary": "summary here",
+      "questions": [
+        {
+          "question": "Question text here",
+          "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+          "answer": "0"
+        }
+      ]
+    }
+  `,
+    });
+
+    const cleanedJson = result.text?.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(cleanedJson ?? "");
+    const summary = parsed.summary;
+    const questions = parsed.questions;
 
     console.log("Summary:", summary);
     console.log("Questions:", questions);

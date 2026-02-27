@@ -10,23 +10,24 @@ import { useState } from "react";
 import { GiFlexibleStar } from "react-icons/gi";
 import { DialoClose } from "./DialoClose";
 import { useAppContext } from "../context/AppContext";
-import { useRouter } from "next/navigation";
 import { ResultQuiz } from "./ResultQuiz";
 
 export const Quiz = () => {
   const [Qnum, setQnum] = useState<number>(0);
   const [answers, setAnswers] = useState<number[]>([]);
-  const { question } = useAppContext();
+  const { article } = useAppContext();
 
   const addQnum = () => setQnum((prev) => prev + 1);
   const saveAnswer = (ans: number) => setAnswers((prev) => [...prev, ans]);
 
   if (Qnum >= 5) {
-    return <ResultQuiz answers={answers} setQnum={setQnum} />;
+    return (
+      <ResultQuiz answers={answers} setQnum={setQnum} setAnswers={setAnswers} />
+    );
   }
 
   return (
-    <div className="h-fit min-w-162.5 w-[40%]">
+    <div className="h-fit min-w-220 w-[40%]">
       <div className="flex w-full justify-between">
         <h1 className="flex text-[24px] font-semibold items-center gap-2">
           <GiFlexibleStar />
@@ -40,14 +41,14 @@ export const Quiz = () => {
       <Card>
         <CardHeader>
           <CardDescription className="text-[#000000] font-medium text-xl flex justify-between">
-            {question[Qnum]?.question}
+            {article?.article.quizzes[Qnum]?.question}
             <span className="w-12.5">
               {Qnum + 1} <span className="text-[#737373] text-base">/ 5</span>
             </span>
           </CardDescription>
         </CardHeader>
         <CardContent className="w-full flex gap-4 flex-wrap">
-          {question[Qnum]?.options.map((ele, i) => (
+          {article?.article.quizzes[Qnum]?.options.map((ele, i) => (
             <Button
               key={i}
               variant={"outline"}
