@@ -22,20 +22,7 @@ export type questionType = {
 }[];
 
 export const Generate = () => {
-  const {
-    mainObj,
-    setMainobj,
-    handleSummarize,
-    postFunction,
-    result,
-    loading,
-  } = useAppContext();
-
-  // useEffect(() => {
-  //   if (result) {
-  //     postFunction();
-  //   }
-  // }, [result]);
+  const { mainObj, setMainobj, handleSummarize, loading } = useAppContext();
 
   if (loading)
     return (

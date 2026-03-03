@@ -76,7 +76,7 @@ export const SummarizedArticle = () => {
               Summarized content
             </p>
             <h1 className="text-[24px] font-semibold">
-              {article?.article.title}
+              {article?.article?.title}
             </h1>
             <p>{article?.article.summary}</p>
           </div>

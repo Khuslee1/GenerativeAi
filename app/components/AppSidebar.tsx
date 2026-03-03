@@ -13,7 +13,7 @@ import { useAppContext } from "../context/AppContext";
 import { useEffect } from "react";
 
 export function AppSidebar() {
-  const { getFunction, titleId, article } = useAppContext();
+  const { getFunction, titleId } = useAppContext();
 
   useEffect(() => {
     getFunction();

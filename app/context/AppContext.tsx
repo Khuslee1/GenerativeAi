@@ -97,6 +97,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
       });
       const data = await response.json();
+      if (!data || (!data.title && !data.article)) {
+        console.error("Invalid article data:", data);
+        return;
+      }
       console.log(data);
       setArticle(data);
     } catch (err) {
